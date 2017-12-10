@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Delaunay Triangulation On 2D Images</title>
+    <link rel="stylesheet" href="style/index.css">
+    <link rel="stylesheet" href="style/slider.css">
+</head>
+
+<body>
+<section id="wrapper">
+    <img src="img/eg1.jpg" alt="image-container" id="img-wrapper">
+</section>
+
+<section id="set">
+    <div id="source-wrapper">
+        <label for="source-input">Click or Drag Here</label>
+        <input type="file" name="source" id="source-input">
+    </div>
+
+    <div class="range-slider" id="set-wrapper">
+        <label>Gradient Threshold (Edge Detection):</label>
+        <input class="range-slider__range" type="range" name="EDGE_DETECT_VALUE" min="0" max="255" step="5">
+        <span class="range-slider__value">80</span>
+        <label>Point Distribution Rate:</label>
+        <input class="range-slider__range" type="range" name="POINT_RATE" min="0.01" max="0.1" step="0.01">
+        <span class="range-slider__value">0.04</span>
+        <label>Maximum Points Sampled:</label>
+        <input class="range-slider__range" type="range" name="POINT_MAX_NUM" min="1000" max="10000" step="500">
+        <span class="range-slider__value">4500</span>
+        <label>Edge Points Sampled:</label>
+        <input class="range-slider__range" type="range" name="EDGE_SIZE" min="2" max="10" step="1">
+        <span class="range-slider__value">4</span>
+        <label>Blur Size:</label>
+        <input class="range-slider__range" type="range" name="BLUR_SIZE" min="0" max="20" step="2">
+        <span class="range-slider__value">2</span>
+        <!--<label>Pixel Limit:</label>-->
+        <!--<input class="range-slider__range" type="range" name="PIXEL_LIMIT" min="1000000" max="10000000" step="1000000">-->
+        <!--<span class="range-slider__value">8000000</span>-->
+    </div>
+    <div id="btn-wra">
+        <button id="run-btn">RUN</button>
+        <button id="download-btn" class="disable">DOWNLOAD</button>
+        <input type="button" value="RESET" onClick="window.location.reload()">
+    </div>
+</section>
+
+<div id="prompt">
+    Some Prompt
+</div>
+<script src="script/jquery.min.js"></script>
+<script src="script/main.js"></script>
+<script src="script/slider.js"></script>
+</body>
+
+</html>
