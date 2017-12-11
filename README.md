@@ -10,7 +10,7 @@ This project consists of several parts:
 
 ## Edge Blur
 Light-weight Guassian blur is applied as pre-processing the image because sometimes details of an image is concentrated in one small area like the following example which makes the output of delaunay triangulation not looking good. 
-![](media/15128860707314/15129590508953.jpg)
+![Example](media/15128860707314/15130020869724.jpg)
 
 ## Edge Detection
 Edge detection can preserve the primary frame and information of one image which tells where to focus on. The more points generated along the edges, the more detailed output image there will be.
@@ -27,7 +27,7 @@ Bowyer-Watson algorithm is implemented to do delaunay triangulation with all the
 A brute-force way is applied instead of the more elegant K-means to decide the color for each triangle. I use the pixel value of each triangle's center of gravity to fill the whole triangle. The output image looks good enough and it is more time efficient in this way.
 
 ## Example Flowchart
-![](media/15128860707314/15129602254327.jpg)
+![Flow Chart](media/15128860707314/15129602254327.jpg)
 
 
 ## Demo
