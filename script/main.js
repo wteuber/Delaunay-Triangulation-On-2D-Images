@@ -40,7 +40,7 @@ $(document).ready(function () {
 		METHODS: {},
 		WOK: {}
 	};
-	// 线程生成方法姑且写成一个工厂方法，目前只用到一个线程
+	// factory worker thread generation
 	ME.METHODS.FactoryWorker = function (workerUrl) {
 		if (!window.Worker) return alert('Your browser does not support worker');
 		var worker = new Worker(workerUrl),
@@ -51,7 +51,7 @@ $(document).ready(function () {
 					data = EData.data;
 				$event.trigger(type, data);
 			}
-			// 加上一层包装用于与线程通讯
+			// add wrapper for thread communication
 		return {
 			emit: function (type, data) {
 				worker.postMessage({
@@ -68,7 +68,7 @@ $(document).ready(function () {
 		};
 	};
 
-	//设置input默认的选项值
+	// set default input
 	ME.METHODS.setDeault = function () {
 		var set = ME.DEFAULT,
 			key = null,
@@ -80,7 +80,7 @@ $(document).ready(function () {
 			item.value = value;
 		});
 	};
-	//更新选项值
+	// update values for settings
 	ME.METHODS.updateDefault = function () {
 		var set = ME.DEFAULT,
 			key = null,
@@ -92,27 +92,25 @@ $(document).ready(function () {
 			set[key] = value;
 		});
 	};
-	//用于设置拖拽图片的的源
+	// load image from drag and drop 
 	ME.METHODS.loadImg = function (src, callback) {
-		//这里使用了代理可以获取到图片的原始数据
 		var tempImg = new Image();
 		tempImg.src = src;
 		tempImg.onload = function (event) {
-			//这边只是用于预览用的
+			// for preview
 			ME.DOM.$imgWrapper.prop('src', src);
-			//传入的原始是图片数据
 			callback(tempImg);
 		}
 
 	}
 
-	//用与生成通用createURL
+	// generate universal createURL
 	ME.METHODS.createUrl = (function () {
 		return window.createObjectURL || window.URL.createObjectURL || window.webkitURL.createObjectURL || alert('浏览器器太久了，改换了');
 	})();
 
 
-	//用于获取图片的源路径
+	// get source path of image
 	ME.METHODS.getImgSrc = function (source) {
 		var type = source.type.substr(0, 5);
 		if (type !== 'image') return console.log('Image is needed！');
@@ -120,7 +118,7 @@ $(document).ready(function () {
 	}
 
 
-	//用于设置图片的属性
+	// set image settings
 	ME.METHODS.setImg = function (img) {
 			var width = img.width,
 				height = img.height,
@@ -136,7 +134,7 @@ $(document).ready(function () {
 			ME.USE.sourceImg = img;
 
 		}
-		//预览图片的居中显示
+		// show preview image in middle
 	ME.METHODS.setImgInMiddle = function (img) {
 		var width = img.width,
 			height = img.height,
@@ -151,14 +149,14 @@ $(document).ready(function () {
 	}
 
 
-	//提示面板的消息设置
+	// prompt
 	ME.METHODS.updatePrompt = function (msg) {
 		ME.DOM.$prompt.text(msg);
 	};
 	ME.METHODS.onPrompt = function (state) {
 		return state && ME.DOM.$prompt.fadeIn('slow') || ME.DOM.$prompt.fadeOut('slow');
 	};
-	//达夫设备
+	// duff
 	ME.METHODS.duff = function (dataArr) {
 		var iterations = (dataArr.length / 8) | 0,
 			leftover = dataArr.length % 8,
@@ -181,7 +179,7 @@ $(document).ready(function () {
 			} while (--iterations > 0);
 		}
 	};
-	//通过canvas序列化图片数据
+	// image data serialized by canvas
 	ME.METHODS.getImgData = (function () {
 		ME.USE.canvas = document.createElement('canvas');
 		var context = ME.USE.context = ME.USE.canvas.getContext('2d');
@@ -195,11 +193,11 @@ $(document).ready(function () {
 		}
 	})();
 	
-	//canvas渲染
+	//canvas rendering
 	ME.METHODS.render = function (renderData) {
 		var context = ME.USE.context,
 			p0, p1, p2, fc;
-		//duff设循环展开
+		
 		ME.METHODS.duff(renderData)(function (item) {
 			p0 = item.p0;
 			p1 = item.p1;
@@ -215,21 +213,18 @@ $(document).ready(function () {
 		});
 
 	};
-	//将处理后的图片显示
+	// show image after processing
 	ME.METHODS.drawImg = function () {
 		var img = ME.DOM.$imgWrapper.get(0);
 		img.src = ME.USE.canvas.toDataURL('image/png');
 	};
-	//上面是一些预先定义的方法
-	/*----------------------------------------------------------------------*/
-	//下面是正式处理程序
-	//	设置默认处理图片,虽然是异步，但一开始就加载应该没什么问题
+	
 	ME.USE.defaultImg.src = ME.DOM.$imgWrapper.get(0).src;
-	//	禁用下载按钮按钮
+	// download button disabled
 	ME.DOM.$downloadBtn.attr("disabled", true);
 	ME.WOK = ME.METHODS.FactoryWorker('./script/canvasDataWorker.js');
-	//	ME.WOK = ME.METHODS.FactoryWorker('./script/handleWorker.js');
-	//文件输入框选择图片
+
+	// input image
 	ME.DOM.$sourceInput.on('change', function (event) {
 		if (!this.value) return;
 		var src = ME.METHODS.getImgSrc(this.files[0]);
@@ -240,7 +235,7 @@ $(document).ready(function () {
 	});
 
 
-	//或者拖拽文件进行选择
+	// set image by drag and drop
 	ME.DOM.$sourceWrapper.on('drop', function (event) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -253,7 +248,7 @@ $(document).ready(function () {
 	});
 
 
-	//点击执行
+	// on click run program
 	ME.DOM.$runBtn.on('click', function (event) {
 		if (!ME.USE.sourceImg) {
 			ME.METHODS.setImg(ME.USE.defaultImg);
@@ -270,7 +265,7 @@ $(document).ready(function () {
 		});
 		ME.USE.imgData = null;
 	});
-	//点击下载
+	// on click download image
 	ME.DOM.$downloadBtn.on('click', function (event) {
 		var link = document.createElement('a');
 		link.href = ME.DOM.$imgWrapper.prop('src');
@@ -285,7 +280,7 @@ $(document).ready(function () {
 
 
 
-	//消息提示
+	// prompt
 	ME.WOK.on('msg', function (event, data) {
 		ME.METHODS.updatePrompt(data.msg);
 	});

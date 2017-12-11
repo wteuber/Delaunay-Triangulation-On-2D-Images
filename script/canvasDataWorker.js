@@ -8,7 +8,7 @@ var W = (function () {
 		W.trigger(eType, eData);
 	}
 	return {
-		/*与主线程通讯的事件*/
+		// communication with main thread
 		emit: function (eType, data) {
 			Self.postMessage({
 				type: eType,
@@ -52,7 +52,7 @@ var W = (function () {
 var Filter = {
 
 	/**
-	 * 取每个像素点的颜色的平均值
+	 * get average value for each pixel
 	 */
 	grayscaleFilterR: function (imageData) {
 		var width = imageData.width | 0,
@@ -248,7 +248,7 @@ var Delaunay = (function () {
 		this.nodes = [p0, p1, p2];
 		this.edges = [new Edge(p0, p1), new Edge(p1, p2), new Edge(p2, p0)];
 
-		// 今回は id は使用しない
+		// id is not used
 		this.id = null;
 
 		// create a circumcircle of this triangle
@@ -320,28 +320,28 @@ var Delaunay = (function () {
 				for (ilen = triangles.length, i = 0; i < ilen; i++) {
 					t = triangles[i];
 
-					// 座標が三角形の外接円に含まれるか調べる
+					// checks whether this points is in circumcircle of its triangle
 					circle = t.circle;
 					dx = circle.x - x;
 					dy = circle.y - y;
 					distSq = dx * dx + dy * dy;
 
 					if (distSq < circle.radiusSq) {
-						// 含まれる場合三角形の辺を保存
+						// save traingle edges if it is in circumcircle
 						edges.push(t.edges[0], t.edges[1], t.edges[2]);
 					} else {
-						// 含まれない場合は持ち越し
+						// carry over if it is not
 						temps.push(t);
 					}
 				}
 
 				polygon = [];
 
-				// 辺の重複をチェック, 重複する場合は削除する
+				// check duplicate edges and delete them
 				edgesLoop: for (ilen = edges.length, i = 0; i < ilen; i++) {
 					edge = edges[i];
 
-					// 辺を比較して重複していれば削除
+					// iteratively check
 					for (jlen = polygon.length, j = 0; j < jlen; j++) {
 						if (edge.eq(polygon[j])) {
 							polygon.splice(j, 1);
@@ -374,7 +374,7 @@ var Delaunay = (function () {
 
 })();
 var METHODS = {
-	//duff设备用于循环展开
+
 	duff: function (dataArr) {
 		var iterations = (dataArr.length / 8) | 0,
 			leftover = dataArr.length % 8,
@@ -397,7 +397,7 @@ var METHODS = {
 			} while (--iterations > 0);
 		}
 	},
-	//数组分批次执行
+	// arrays are executed in batches
 	shunt: function (arr) {
 		var shuntSize = 8000,
 			len = (arr.length / shuntSize) | 0,
@@ -431,7 +431,7 @@ var BASE = {
 var To = {
 	init: function (set, imgData) {
 		BASE.set = set;
-		//模糊处理矩阵
+		// blur matrix
 		BASE.blur = (function (size) {
 			var matrix = [];
 			var side = size * 2 + 1;
@@ -440,7 +440,7 @@ var To = {
 			return matrix;
 		})(set.BLUR_SIZE);
 
-		// 边缘识别矩阵
+		// edge detection matrix
 		BASE.edge = (function (size) {
 			var matrix = [];
 			var side = size * 2 + 1;
@@ -461,10 +461,8 @@ var To = {
 			height = imageData.height,
 			blur = BASE.blur,
 			edge = BASE.edge;
-		//过滤器用于处理图片的数据
-		// W.emit('msg', {
-		// 	msg: 'Split color channels'
-		// });
+		
+		// filter used for processing image data
 		Filter.grayscaleFilterR(imageData);
 		W.emit('msg', {
 			msg: 'Edge blur processing'
@@ -474,7 +472,7 @@ var To = {
 			msg: 'Edge detection'
 		});
 		Filter.convolutionFilterR(edge, imageData);
-		// 检测边缘上的点
+		// generate points on edges
 		W.emit('msg', {
 			msg: 'Generating random sample points'
 		});
